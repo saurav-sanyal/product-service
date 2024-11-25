@@ -1,35 +1,36 @@
 package com.whitewolf.product.controller;
 
-
 import com.whitewolf.product.model.MasterProduct;
-import com.whitewolf.product.repository.MasterProductRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.whitewolf.product.service.MasterProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/products")
-@RequiredArgsConstructor
-@Slf4j
+@RequestMapping("api/master-products")
 public class MasterProductController {
 
-    private final MasterProductRepository productRepository;
-
-    @GetMapping
-    public List<MasterProduct> getAllProducts() {
-        log.info("Fetching all products");
-        return productRepository.findAll();
-    }
+    @Autowired
+    private MasterProductService masterProductService;
 
     @PostMapping
-    public String addProduct(@RequestBody MasterProduct product) {
-        log.info("Setting id to null for incoming product request: {}", product);
-        product.setId(null);
-        productRepository.save(product);
-        log.info("Product creation successfully for product: {} with id {}", product, product.getId());
-        return "Product added successfully";
+    public MasterProduct createMasterProduct(@RequestBody MasterProduct masterProduct) {
+        return masterProductService.createMasterProduct(masterProduct);
     }
 
+    @PutMapping("/{productId}")
+    public MasterProduct updateMasterProduct(@PathVariable Long productId, @RequestBody MasterProduct masterProduct) {
+        return masterProductService.updateMasterProduct(productId, masterProduct);
+    }
+
+    @GetMapping("/{productId}")
+    public MasterProduct getMasterProduct(@PathVariable Long productId) {
+        return masterProductService.getMasterProduct(productId);
+    }
+
+    @DeleteMapping("/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMasterProduct(@PathVariable Long productId) {
+        masterProductService.deleteMasterProduct(productId);
+    }
 }

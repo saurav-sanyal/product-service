@@ -2,30 +2,34 @@ package com.whitewolf.product.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Entity
-public class MasterProduct {
+@AllArgsConstructor
+@NoArgsConstructor
+public class VariantProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private String category;
+    private String sku;
+    private String color;
+    private String size;
+    private String material;
+    private BigDecimal additionalPrice;
+    private Integer quantity;
 
-    @OneToMany(mappedBy = "masterProduct", cascade = CascadeType.ALL)
-    private List<VariantProduct> variants;
+    @ManyToOne
+    @JoinColumn(name = "master_product_id", nullable = false)
+    private MasterProduct masterProduct;
 
     private boolean active;
     private String createdBy;
@@ -41,3 +45,4 @@ public class MasterProduct {
     private Map<String, String> attributes;
 
 }
+

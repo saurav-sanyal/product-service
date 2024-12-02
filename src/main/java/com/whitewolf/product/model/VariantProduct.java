@@ -10,35 +10,53 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "variant_product", uniqueConstraints = @UniqueConstraint(columnNames = {"sku"}))
 public class VariantProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 100)
     private String sku;
+
+    @Column(length = 50)
     private String color;
+
+    @Column(length = 50)
     private String size;
+
+    @Column(length = 100)
     private String material;
+
+    @Column(name = "additional_price", precision = 10, scale = 2)
     private BigDecimal additionalPrice;
+
+    @Column(nullable = false)
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_product_id", nullable = false)
     private MasterProduct masterProduct;
 
+    @Column(nullable = false)
     private boolean active;
+
+    @Column(name = "created_by", nullable = false, length = 50)
     private String createdBy;
+
+    @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
     @Column(name = "updated_at")
     private Long updatedAt;
 
     @ElementCollection
+    @CollectionTable(name = "variant_product_attributes", joinColumns = @JoinColumn(name = "variant_product_id"))
+    @MapKeyColumn(name = "attribute_key")
+    @Column(name = "attribute_value", length = 1000)
     private Map<String, String> attributes;
-
 }
-

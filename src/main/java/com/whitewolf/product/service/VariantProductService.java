@@ -1,9 +1,12 @@
 package com.whitewolf.product.service;
 
+import com.whitewolf.product.dto.VariantProductDto;
+import com.whitewolf.product.exception.ResourceNotFoundException;
 import com.whitewolf.product.model.MasterProduct;
 import com.whitewolf.product.model.VariantProduct;
 import com.whitewolf.product.repository.MasterProductRepository;
 import com.whitewolf.product.repository.VariantProductRepository;
+import com.whitewolf.product.utils.ProductServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +21,23 @@ public class VariantProductService {
     @Autowired
     private MasterProductRepository masterProductRepository;
 
-    public VariantProduct createVariant(Long masterProductId, VariantProduct variantProduct) {
-        Optional<MasterProduct> masterProductOpt = masterProductRepository.findById(masterProductId);
-        if (!masterProductOpt.isPresent()) {
-            throw new IllegalArgumentException("Master product not found");
+    public VariantProduct createVariant(VariantProductDto variantProductDto) {
+        Optional<MasterProduct> masterProductOpt = masterProductRepository.findById(variantProductDto.getMasterProduct().getId());
+        if (masterProductOpt.isEmpty()) {
+            throw new ResourceNotFoundException("Master product not found");
         }
 
+
         MasterProduct masterProduct = masterProductOpt.get();
+        VariantProduct variantProduct = ProductServiceMapper.INSTANCE.toEntity(variantProductDto);
+
         variantProduct.setMasterProduct(masterProduct);
         variantProduct.setCreatedAt(System.currentTimeMillis());
         variantProduct.setUpdatedAt(System.currentTimeMillis());
         return variantProductRepository.save(variantProduct);
     }
 
-    public VariantProduct updateVariant(Long variantId, VariantProduct updatedVariant) {
+    public VariantProduct updateVariant(Long variantId, VariantProductDto updatedVariant) {
         Optional<VariantProduct> existingVariantOpt = variantProductRepository.findById(variantId);
         if (!existingVariantOpt.isPresent()) {
             throw new IllegalArgumentException("Variant not found");
@@ -59,4 +65,5 @@ public class VariantProductService {
         }
         return variantProductOpt.get();
     }
+
 }

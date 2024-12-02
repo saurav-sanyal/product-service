@@ -56,7 +56,7 @@ public class VariantProduct {
 
     @ElementCollection
     @CollectionTable(name = "variant_product_attributes", joinColumns = @JoinColumn(name = "variant_product_id"))
-    @MapKeyColumn(name = "attribute_key")
-    @Column(name = "attribute_value", length = 1000)
+    @MapKeyColumn(name = "key", length = 100)
+    @Column(name = "value", length = 500)
     private Map<String, String> attributes;
 }

@@ -43,7 +43,10 @@ class MasterProductControllerTests {
                         "description": "A test product",
                         "price": 99.99,
                         "category": "Test Category",
-                        "active": true
+                        "active": true,
+                        "attributes":{
+                            "key1":"value1"
+                            }
                     }
                 """))
                 .andExpect(status().isOk())

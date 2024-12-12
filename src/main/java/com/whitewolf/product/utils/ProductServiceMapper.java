@@ -7,6 +7,8 @@ import com.whitewolf.product.model.MasterProduct;
 import com.whitewolf.product.model.VariantProduct;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @org.mapstruct.Mapper
 public interface ProductServiceMapper {
 
@@ -19,4 +21,9 @@ public interface ProductServiceMapper {
     VariantProduct toEntity(VariantProductDto dto);
 
     MasterProduct toEntity(MasterProductInputDto masterProductDto);
+
+    List<MasterProductDto> toMasterDTOList(List<MasterProduct> masterProductList);
+
+    List<VariantProductDto> toVariantDTOList(List<VariantProduct> varaintProductList);
+
 }

@@ -1,5 +1,6 @@
 package com.whitewolf.product.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class MasterProduct {
     @Column(nullable = false, length = 100)
     private String category;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "masterProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<VariantProduct> variants;
 

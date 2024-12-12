@@ -7,9 +7,12 @@ import com.whitewolf.product.model.MasterProduct;
 import com.whitewolf.product.service.MasterProductService;
 import com.whitewolf.product.utils.ProductServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/master-products")
@@ -62,4 +65,64 @@ public class MasterProductController {
         );
         return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/findByName")
+    public ResponseEntity<ApiResponse<List<MasterProductDto>>> getMasterProductByName(@RequestParam String name) {
+        List<MasterProduct> masterProductList = masterProductService.getMasterProductByName(name);
+        ApiResponse<List<MasterProductDto>> response = new ApiResponse<>(
+                "success",
+                "Master Product list retrieved successfully",
+                ProductServiceMapper.INSTANCE.toMasterDTOList(masterProductList)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/findByCategory")
+    public ResponseEntity<ApiResponse<List<MasterProductDto>>> getMasterProductByCategory(@RequestParam String category) {
+        List<MasterProduct> masterProductList = masterProductService.getMasterProductByCategory(category);
+        ApiResponse<List<MasterProductDto>> response = new ApiResponse<>(
+                "success",
+                "Master Product list retrieved successfully",
+                ProductServiceMapper.INSTANCE.toMasterDTOList(masterProductList)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/findByDescription")
+    public ResponseEntity<ApiResponse<List<MasterProductDto>>> getMasterProductByDescription(@RequestParam String description) {
+        List<MasterProduct> masterProductList = masterProductService.getMasterProductByDescription(description);
+        ApiResponse<List<MasterProductDto>> response = new ApiResponse<>(
+                "success",
+                "Master Product list retrieved successfully",
+                ProductServiceMapper.INSTANCE.toMasterDTOList(masterProductList)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/findBySpecification")
+    public ResponseEntity<ApiResponse<List<MasterProductDto>>> getMasterProductBySpecification(@RequestParam String name, @RequestParam String minPrice) {
+        List<MasterProduct> masterProductList = masterProductService.findProducts(name, Double.valueOf(minPrice));
+        ApiResponse<List<MasterProductDto>> response = new ApiResponse<>(
+                "success",
+                "Master Product list retrieved successfully",
+                ProductServiceMapper.INSTANCE.toMasterDTOList(masterProductList)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<MasterProduct>>> searchMasterProduct(@RequestParam String name,
+                                                                                   @RequestParam int page,
+                                                                                   @RequestParam int size
+    ) {
+        Page<MasterProduct> masterProductList = masterProductService.getPagedProducts(name, page, size);
+        ApiResponse<Page<MasterProduct>> response = new ApiResponse<>(
+                "success",
+                "Master Product list retrieved successfully",
+                masterProductList
+        );
+        return ResponseEntity.ok(response);
+    }
+
 }

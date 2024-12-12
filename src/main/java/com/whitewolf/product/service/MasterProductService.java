@@ -4,13 +4,20 @@ import com.whitewolf.product.dto.MasterProductInputDto;
 import com.whitewolf.product.exception.ResourceNotFoundException;
 import com.whitewolf.product.model.MasterProduct;
 import com.whitewolf.product.repository.MasterProductRepository;
+import com.whitewolf.product.repository.MasterProductSpecifications;
 import com.whitewolf.product.utils.ProductServiceMapper;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -76,5 +83,29 @@ public class MasterProductService {
         logger.info("Deleting master product with ID: {}", productId);
         masterProductRepository.deleteById(productId);
         logger.info("Successfully deleted master product with ID: {}", productId);
+    }
+
+    public List<MasterProduct> getMasterProductByName(String name) {
+        return masterProductRepository.findByName(name);
+    }
+
+    public List<MasterProduct> getMasterProductByCategory(String category) {
+        return masterProductRepository.findByCategory(category);
+    }
+
+    public List<MasterProduct> getMasterProductByDescription(String description) {
+        return masterProductRepository.findByDescription(description);
+    }
+
+    public List<MasterProduct> findProducts(String name, Double minPrice) {
+        Specification<MasterProduct> spec = Specification
+                .where(MasterProductSpecifications.nameContains(name))
+                .and(MasterProductSpecifications.priceGreaterThan(minPrice));
+        return masterProductRepository.findAll(spec);
+    }
+
+    public Page<MasterProduct> getPagedProducts(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return masterProductRepository.findByNameContaining(name, pageable);
     }
 }

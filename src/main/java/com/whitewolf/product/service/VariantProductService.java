@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,5 +86,25 @@ public class VariantProductService {
         }
         logger.info("Successfully fetched variant product with ID: {}", variantId);
         return variantProductOpt.get();
+    }
+
+    public List<VariantProduct> getVariantProductByColor(String color) {
+        return variantProductRepository.findByColor(color);
+    }
+
+    public List<VariantProduct> getVariantProductBySize(String size) {
+        return variantProductRepository.findBySize(size);
+    }
+
+    public List<VariantProduct> getVariantProductByColorAndSize(String color, String size) {
+        return variantProductRepository.findByColorAndSize(color,size);
+    }
+
+    public List<VariantProduct> getVariantProductByColorAndSizeViaCriteriaWay(String color, String size) {
+        return variantProductRepository.criteriaWayFindByColorAndSize(color,size);
+    }
+
+    public List<VariantProduct> getVariantProductByMasterProductName(String name) {
+        return variantProductRepository.findByMasterProductName(name);
     }
 }
